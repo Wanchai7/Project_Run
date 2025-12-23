@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         .page-header {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1533560906234-54cb6264e97e?q=80&w=2070');
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.britannica.com/93/253593-138-0DD5803B/History-of-the-marathon.jpg?w=800&h=450&c=crop');
             background-size: cover;
             background-position: center;
             height: 350px;

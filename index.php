@@ -19,7 +19,6 @@
         }
 
         body {
-            font-family: 'Sarabun', sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -28,7 +27,7 @@
         /* Hero Section (Banner หลัก) */
         .hero-section {
             background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)),
-                url('https://images.unsplash.com/photo-1552674605-5d2178b64978?q=80&w=2070');
+                url('https://img.nmcdn.io/e1/w:2000,h:964,v:1/marathonsports/wp-content/uploads/2024/10/Large-group-of-runners-running-a-marathon.webp?s=b791c95a');
             background-size: cover;
             background-position: center;
             height: 90vh;
