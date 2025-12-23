@@ -50,7 +50,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
     <div class="container">
         <a class="navbar-brand" href="index.php">
-            <i class="bi bi-person-running me-2"></i>CITY MARATHON
+            <i class="bi bi-person-running me-2"></i>MCRU MARATHON
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
