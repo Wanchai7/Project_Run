@@ -44,6 +44,20 @@ if (!isset($_SESSION['user_id'])) {
             margin: 30px 0 20px;
             font-weight: 700;
         }
+
+        /* เพิ่มสไตล์ปุ่ม Action ให้เด่นขึ้น */
+        .btn-action {
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            border: none;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(221, 36, 118, 0.3);
+            color: white;
+        }
     </style>
 </head>
 
@@ -61,6 +75,7 @@ if (!isset($_SESSION['user_id'])) {
     <div class="container">
         <div class="form-wrapper">
             <form id="regisForm" action="save_registration.php" method="POST">
+
                 <h4 class="section-head">1. ข้อมูลส่วนตัว (Personal Info)</h4>
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label text-muted small">ชื่อจริง</label><input type="text"
@@ -76,11 +91,12 @@ if (!isset($_SESSION['user_id'])) {
                             name="วันเกิด" onchange="checkAge()" required>
                         <small id="ageDisplay" class="text-primary fw-bold ms-1"></small>
                     </div>
-                    <div class="col-md-6"><label class="form-label text-muted small">เพศ</label><select
-                            class="form-select form-select-lg bg-light border-0" name="เพศ">
+                    <div class="col-md-6"><label class="form-label text-muted small">เพศ</label>
+                        <select class="form-select form-select-lg bg-light border-0" name="เพศ">
                             <option value="ชาย">ชาย</option>
                             <option value="หญิง">หญิง</option>
-                        </select></div>
+                        </select>
+                    </div>
                     <div class="col-md-6"><label class="form-label text-muted small">เบอร์โทรศัพท์</label><input
                             type="tel" class="form-control form-control-lg bg-light border-0" name="เบอร์โทรศัพท์">
                     </div>
@@ -128,15 +144,28 @@ if (!isset($_SESSION['user_id'])) {
                         <small id="ageWarning" class="text-danger" style="display:none;">* อายุไม่ถึง 60 ปี
                             ไม่สามารถเลือกเรทผู้สูงอายุได้</small>
                     </div>
-                    <div class="col-md-4 text-center">
-                        <div class="p-3 border rounded bg-light">
+
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded bg-light text-center h-100">
                             <i class="bi bi-person-arms-up fs-1 text-secondary"></i>
                             <label class="d-block mt-2 fw-bold">ไซส์เสื้อวิ่ง</label>
-                            <select class="form-select mt-2" name="ไซส์เสื้อ">
+                            <select class="form-select mt-2 mb-3" name="ไซส์เสื้อ">
                                 <option value="S">S (36")</option>
                                 <option value="M">M (38")</option>
                                 <option value="L">L (40")</option>
                                 <option value="XL">XL (42")</option>
+                            </select>
+
+                            <hr>
+
+                            <i class="bi bi-gift fs-3 text-secondary"></i>
+                            <label class="d-block mt-1 fw-bold">ของที่ระลึก (ซื้อเพิ่ม)</label>
+                            <select class="form-select mt-2 border-warning" id="souvenirSelect" name="ของที่ระลึก"
+                                onchange="calculatePrice()">
+                                <option value="ไม่รับ" data-price="0">ไม่รับ</option>
+                                <option value="หมวกวิ่ง" data-price="150">หมวกวิ่ง (+150 บ.)</option>
+                                <option value="ผ้าขนหนู" data-price="100">ผ้าขนหนู (+100 บ.)</option>
+                                <option value="กระบอกน้ำ" data-price="250">กระบอกน้ำ (+250 บ.)</option>
                             </select>
                         </div>
                     </div>
@@ -180,28 +209,75 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <script>
-        function syncShip(r) { document.getElementById('shippingOption').value = r.value; calculatePrice(); }
-        function toggleMed() {
-            let y = document.getElementById('medYes').checked; let i = document.getElementById('medInput');
-            if (y) { i.readOnly = false; i.value = ""; i.focus(); } else { i.readOnly = true; i.value = "ไม่มี"; }
+        function syncShip(r) {
+            document.getElementById('shippingOption').value = r.value;
+            calculatePrice();
         }
+
+        function toggleMed() {
+            let y = document.getElementById('medYes').checked;
+            let i = document.getElementById('medInput');
+            if (y) {
+                i.readOnly = false;
+                i.value = "";
+                i.focus();
+            } else {
+                i.readOnly = true;
+                i.value = "ไม่มี";
+            }
+        }
+
         function checkAge() {
             let bd = document.getElementById('birthDate').value;
             if (bd) {
-                let d = new Date(bd); let now = new Date(); let age = now.getFullYear() - d.getFullYear();
+                let d = new Date(bd);
+                let now = new Date();
+                let age = now.getFullYear() - d.getFullYear();
                 if (now.getMonth() < d.getMonth() || (now.getMonth() == d.getMonth() && now.getDate() < d.getDate())) age--;
                 document.getElementById('ageDisplay').innerText = "อายุ: " + age + " ปี";
                 let s = document.getElementById('optionSenior');
-                if (age < 60) { s.disabled = true; if (document.getElementById('runnerType').value == 'ผู้สูงอายุ') { document.getElementById('runnerType').value = 'บุคคลทั่วไป'; calculatePrice(); document.getElementById('ageWarning').style.display = 'block'; } }
-                else { s.disabled = false; document.getElementById('ageWarning').style.display = 'none'; }
+                if (age < 60) {
+                    s.disabled = true;
+                    if (document.getElementById('runnerType').value == 'ผู้สูงอายุ') {
+                        document.getElementById('runnerType').value = 'บุคคลทั่วไป';
+                        calculatePrice();
+                        document.getElementById('ageWarning').style.display = 'block';
+                    }
+                } else {
+                    s.disabled = false;
+                    document.getElementById('ageWarning').style.display = 'none';
+                }
             }
         }
+
         function calculatePrice() {
-            let rs = document.getElementById('raceCategory'); let bp = parseFloat(rs.options[rs.selectedIndex].getAttribute('data-price')) || 0;
-            let ts = document.getElementById('runnerType'); let dc = parseFloat(ts.options[ts.selectedIndex].getAttribute('data-discount')) || 0;
-            let ss = document.getElementById('shippingOption'); let sc = parseFloat(ss.options[ss.selectedIndex].getAttribute('data-cost')) || 0;
-            let t = (bp - dc) + sc; if (t < 0) t = 0;
-            document.getElementById('totalDisplay').innerText = t.toLocaleString(); document.getElementById('totalAmount').value = t;
+            // 1. ราคาค่าวิ่ง
+            let rs = document.getElementById('raceCategory');
+            let bp = parseFloat(rs.options[rs.selectedIndex].getAttribute('data-price')) || 0;
+
+            // 2. ส่วนลด
+            let ts = document.getElementById('runnerType');
+            let dc = parseFloat(ts.options[ts.selectedIndex].getAttribute('data-discount')) || 0;
+
+            // 3. ค่าส่ง
+            let ss = document.getElementById('shippingOption');
+            let sc = parseFloat(ss.options[ss.selectedIndex].getAttribute('data-cost')) || 0;
+
+            // 4. [เพิ่ม] ราคาของที่ระลึก
+            let sv = document.getElementById('souvenirSelect');
+            let sv_price = parseFloat(sv.options[sv.selectedIndex].getAttribute('data-price')) || 0;
+
+            // คำนวณรวม
+            let t = (bp - dc) + sc + sv_price;
+
+            if (t < 0) t = 0;
+
+            // แสดงผล
+            document.getElementById('totalDisplay').innerText = t.toLocaleString();
+            document.getElementById('totalAmount').value = t;
         }
     </script>
     <?php include 'footer.php'; ?>
+</body>
+
+</html>
