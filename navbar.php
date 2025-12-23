@@ -61,6 +61,12 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li class="nav-item"><a class="nav-link" href="register.php">สมัครวิ่ง</a></li>
                 <li class="nav-item"><a class="nav-link" href="check_status.php">เช็คสถานะ</a></li>
 
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-warning" href="payment.php">
+                        <i class="bi bi-cash-coin me-1"></i> แจ้งชำระเงิน
+                    </a>
+                </li>
+
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <?php if ($_SESSION['role'] == 'admin'): ?>
                         <li class="nav-item ms-lg-2">
